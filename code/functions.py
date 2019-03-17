@@ -9,10 +9,17 @@
 import numpy as np 
 
 ######################################################################################
+
 # Apply Sigmoid Function
 def sigmoid(X):
     # overflow for large numbers
     return 1 / (1 + np.e**(-X))
+
+# compute cost
+def computeCost(predicted, actual):
+    y = actual
+    y_hat = predicted
+    return np.sum(- y * np.log(y_hat) - (1-y) * np.log(1-y_hat))
     
 
 ######################################################################################
