@@ -59,9 +59,12 @@ testData = standarize(testData, mean, stddev)
 ######################################################################################
 # Training
 
-trainLogisticRegression(trainingData, encFeatures)
+# model = weights (including bias unit)
+model = trainLogisticRegression\
+    (trainingData, trainingClasses, encFeatures, epochs, learnRate)
 
 ######################################################################################
 # Testing
 
-
+# test and print results
+testLogisticRegression(testData, testClasses, model)

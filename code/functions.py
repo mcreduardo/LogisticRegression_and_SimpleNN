@@ -102,7 +102,7 @@ def initializeModel(features):
     return weights
 
 
-def trainLogisticRegression(trainData, features):
+def trainLogisticRegression(trainData, classes, features, epochs, learnRate):
 
     # initialize weights - [bias unit, input features]
     weights = initializeModel(features)
@@ -112,5 +112,70 @@ def trainLogisticRegression(trainData, features):
     ones[:,1:] = ones[:,1:] * trainData
     trainData = ones
 
+    # train
+    for j in range(epochs):
+        loss = 0
+        correct = 0
+        misclassified = 0
+        for i in range(len(trainData)):
+            # predict
+            output = sigmoid(np.sum(weights * trainData[i]))
+            if round(output) == classes[i]: correct += 1
+            else: misclassified += 1
+            # loss
+            loss += computeCost(output, classes[i])
+            # correct
+            weights = weights + learnRate * (classes[i]-output) * trainData[i]
+
+        # print training output
+        print(j+1, end = " ")
+        print("%.12f"%loss, end = " ")
+        print(correct, end = " ")
+        print(misclassified)
+
+    return weights
 
 
+######################################################################################
+# Testing - Logistic regression
+
+def testLogisticRegression(testData, classes, weights):
+
+    # add bias unit to data
+    ones = np.ones((testData.shape[0], testData.shape[1] +1))
+    ones[:,1:] = ones[:,1:] * testData
+    testData = ones
+
+    # var to calculate precision recall
+    truePositive = 0
+    falseNegative = 0
+    falsePositive = 0
+
+    correct = 0
+    misclassified = 0
+    for i in range(len(testData)):
+        # predict
+        output = sigmoid(np.sum(weights * testData[i]))
+        if round(output) == classes[i]: correct += 1
+        else: misclassified += 1
+
+        # precision recall
+        if classes[i] == 1:
+            if round(output) == 1: truePositive += 1
+            else:  falseNegative += 1
+        else: 
+            if round(output) == 1: falsePositive += 1
+
+        # print instance output
+        print("%.12f"%output, end = " ")
+        print(int(round(output)), end = " ")
+        print(int(classes[i]))
+
+    # print set output
+    print(correct, end = " ")
+    print(misclassified)
+
+    precision = truePositive/(truePositive + falsePositive)   
+    recall = truePositive/(truePositive + falseNegative)
+    F1_score = 2 * precision * recall / (precision + recall)
+    print("%.12f"%F1_score)
