@@ -61,11 +61,11 @@ testData = standarize(testData, mean, stddev)
 # Training
 
 # model = weights (including bias unit)
-model = trainNNet\
+w_i_h, w_h_o = trainNNet\
     (trainingData, trainingClasses, encFeatures, epochs, learnRate, hiddenUnits)
 
 ######################################################################################
 # Testing
 
 # test and print results
-#testLogisticRegression(testData, testClasses, model)
+testNNet(testData, testClasses, w_i_h, w_h_o)
