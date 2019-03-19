@@ -179,3 +179,60 @@ def testLogisticRegression(testData, classes, weights):
     recall = truePositive/(truePositive + falseNegative)
     F1_score = 2 * precision * recall / (precision + recall)
     print("%.12f"%F1_score)
+
+
+
+######################################################################################
+# Training - 1 hidden layer NN
+
+def initializeModel(features, hiddenUnits):
+    # weights ->>> input features + bias unit
+    numberInputs = len(features)+1
+    w_i_h = np.random.uniform(low=-0.01, high=0.01, size=(hiddenUnits, numberInputs))
+    w_h_o = np.random.uniform(low=-0.01, high=0.01, size=(1, hiddenUnits + 1))
+    return w_i_h, w_h_o
+
+
+def trainNNet(trainData, classes, features, epochs, learnRate, hiddenUnits):
+
+    # initialize weights
+    # jth input unit to the ith hidden unit
+    # ith hidden unit to the output unit
+    w_i_h, w_h_o = initializeModel(features, hiddenUnits)
+
+    # add bias unit to data
+    ones = np.ones((trainData.shape[0], trainData.shape[1] +1))
+    ones[:,1:] = ones[:,1:] * trainData
+    trainData = ones
+
+    # train
+    for j in range(epochs):
+        loss = 0
+        correct = 0
+        misclassified = 0
+        for i in range(len(trainData)):
+            # predict hidden layer output
+            hiddenLayerOutput = sigmoid(np.matmul(w_i_h, trainData[i]))
+            # add bias unit
+            ones = np.ones(len(hiddenLayerOutput) + 1)
+            ones[1:] *= hiddenLayerOutput
+            hiddenLayerOutput = ones
+            # predict output
+            output = sigmoid(np.sum(w_h_o * hiddenLayerOutput))
+            if round(output) == classes[i]: correct += 1
+            else: misclassified += 1
+            # loss
+            loss += computeCost(output, classes[i])
+            # correct
+            errorOutput = classes[i]-output
+            errorHiddenUnits =\
+                hiddenLayerOutput * (1 - hiddenLayerOutput) * errorOutput * w_h_o[0]
+            w_h_o = w_h_o + learnRate * errorOutput * hiddenLayerOutput
+            w_i_h = w_i_h + learnRate * np.outer(errorHiddenUnits[1:], trainData[i])
+        # print training output
+        print(j+1, end = " ")
+        print("%.12f"%loss, end = " ")
+        print(correct, end = " ")
+        print(misclassified)
+
+    #return weights
