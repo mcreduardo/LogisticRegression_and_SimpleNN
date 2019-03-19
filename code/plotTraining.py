@@ -1,7 +1,7 @@
 ######################################################################################
 # Eduardo Moura Cirilo Rocha, mouracirilor@wisc.edu
 # March of 2019
-# Logistic Regression using NN structure and stochastic gradient descent
+# plot F1 score for both NN and LR
 ######################################################################################
 
 import json
@@ -19,9 +19,10 @@ np.random.seed(0)
 
 # Receive arguments using sys
 learnRate = float(sys.argv[1])
-epochs = int(sys.argv[2])
-trainingSetPath = sys.argv[3]
-testSetPath = sys.argv[4]
+hiddenUnits = int(sys.argv[2])
+max_epochs = int(sys.argv[3])
+trainingSetPath = sys.argv[4]
+testSetPath = sys.argv[5]
 
 # Load training and test set
 # metadata + data
@@ -57,14 +58,30 @@ trainingData = standarize(trainingData, mean, stddev)
 testData = standarize(testData, mean, stddev)
 
 ######################################################################################
-# Training
+# Logistic Regression
+for epochs in range(max_epochs):
+    model = trainLogisticRegression\
+        (trainingData, trainingClasses, encFeatures, epochs, learnRate, False)
+    testLogisticRegression(trainingData, trainingClasses, model, False)
+print("")
+for epochs in range(max_epochs):
+    model = trainLogisticRegression\
+        (trainingData, trainingClasses, encFeatures, epochs, learnRate, False)
+    testLogisticRegression(testData, testClasses, model, False)
 
-# model = weights (including bias unit)
-model = trainLogisticRegression\
-    (trainingData, trainingClasses, encFeatures, epochs, learnRate, True)
-
+print("")
+print("")
 ######################################################################################
-# Testing
+# NNet
+for epochs in range(max_epochs):
+    w_i_h, w_h_o = trainNNet\
+        (trainingData, trainingClasses, encFeatures, epochs, learnRate, hiddenUnits, False)
+    testNNet(trainingData, trainingClasses, w_i_h, w_h_o, False)
+print("")
+for epochs in range(max_epochs):
+    w_i_h, w_h_o = trainNNet\
+        (trainingData, trainingClasses, encFeatures, epochs, learnRate, hiddenUnits, False)
+    testNNet(testData, testClasses, w_i_h, w_h_o, False)
 
-# test and print results
-testLogisticRegression(testData, testClasses, model, True)
+print("")
+print("")

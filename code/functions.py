@@ -95,17 +95,17 @@ def standarize(data, mean, stddev):
 ######################################################################################
 # Training - Logistic regression
 
-def initializeModel(features):
+def initializeModelLR(features):
     # weights ->>> input features + bias unit
     sizeModel = len(features)+1
     weights = np.random.uniform(low=-0.01, high=0.01, size=(1, sizeModel))
     return weights
 
 
-def trainLogisticRegression(trainData, classes, features, epochs, learnRate):
+def trainLogisticRegression(trainData, classes, features, epochs, learnRate, printOutput):
 
     # initialize weights - [bias unit, input features]
-    weights = initializeModel(features)
+    weights = initializeModelLR(features)
 
     # add bias unit to data
     ones = np.ones((trainData.shape[0], trainData.shape[1] +1))
@@ -128,10 +128,11 @@ def trainLogisticRegression(trainData, classes, features, epochs, learnRate):
             weights = weights + learnRate * (classes[i]-output) * trainData[i]
 
         # print training output
-        print(j+1, end = " ")
-        print("%.12f"%loss, end = " ")
-        print(correct, end = " ")
-        print(misclassified)
+        if printOutput:
+            print(j+1, end = " ")
+            print("%.12f"%loss, end = " ")
+            print(correct, end = " ")
+            print(misclassified)
 
     return weights
 
@@ -139,7 +140,7 @@ def trainLogisticRegression(trainData, classes, features, epochs, learnRate):
 ######################################################################################
 # Testing - Logistic regression
 
-def testLogisticRegression(testData, classes, weights):
+def testLogisticRegression(testData, classes, weights, printOutput):
 
     # add bias unit to data
     ones = np.ones((testData.shape[0], testData.shape[1] +1))
@@ -167,13 +168,15 @@ def testLogisticRegression(testData, classes, weights):
             if round(output) == 1: falsePositive += 1
 
         # print instance output
-        print("%.12f"%output, end = " ")
-        print(int(round(output)), end = " ")
-        print(int(classes[i]))
+        if printOutput:
+            print("%.12f"%output, end = " ")
+            print(int(round(output)), end = " ")
+            print(int(classes[i]))
 
     # print set output
-    print(correct, end = " ")
-    print(misclassified)
+    if printOutput:
+        print(correct, end = " ")
+        print(misclassified)
 
     if (truePositive + falsePositive) == 0:
         recall = truePositive/(truePositive + falseNegative)
@@ -189,7 +192,7 @@ def testLogisticRegression(testData, classes, weights):
 ######################################################################################
 # Training - 1 hidden layer NN
 
-def initializeModel(features, hiddenUnits):
+def initializeModelNN(features, hiddenUnits):
     # weights ->>> input features + bias unit
     numberInputs = len(features)+1
     w_i_h = np.random.uniform(low=-0.01, high=0.01, size=(hiddenUnits, numberInputs))
@@ -197,12 +200,12 @@ def initializeModel(features, hiddenUnits):
     return w_i_h, w_h_o
 
 
-def trainNNet(trainData, classes, features, epochs, learnRate, hiddenUnits):
+def trainNNet(trainData, classes, features, epochs, learnRate, hiddenUnits, printOutput):
 
     # initialize weights
     # jth input unit to the ith hidden unit
     # ith hidden unit to the output unit
-    w_i_h, w_h_o = initializeModel(features, hiddenUnits)
+    w_i_h, w_h_o = initializeModelNN(features, hiddenUnits)
 
     # add bias unit to data
     ones = np.ones((trainData.shape[0], trainData.shape[1] +1))
@@ -234,10 +237,11 @@ def trainNNet(trainData, classes, features, epochs, learnRate, hiddenUnits):
             w_h_o = w_h_o + learnRate * errorOutput * hiddenLayerOutput
             w_i_h = w_i_h + learnRate * np.outer(errorHiddenUnits[1:], trainData[i])
         # print training output
-        print(j+1, end = " ")
-        print("%.12f"%loss, end = " ")
-        print(correct, end = " ")
-        print(misclassified)
+        if printOutput:
+            print(j+1, end = " ")
+            print("%.12f"%loss, end = " ")
+            print(correct, end = " ")
+            print(misclassified)
 
     return w_i_h, w_h_o
 
@@ -245,7 +249,7 @@ def trainNNet(trainData, classes, features, epochs, learnRate, hiddenUnits):
 ######################################################################################
 # Testing - 1 hidden layer NN
 
-def testNNet(testData, classes, w_i_h, w_h_o):
+def testNNet(testData, classes, w_i_h, w_h_o, printOutput):
 
     # add bias unit to data
     ones = np.ones((testData.shape[0], testData.shape[1] +1))
@@ -280,13 +284,15 @@ def testNNet(testData, classes, w_i_h, w_h_o):
             if round(output) == 1: falsePositive += 1
 
         # print instance output
-        print("%.12f"%output, end = " ")
-        print(int(round(output)), end = " ")
-        print(int(classes[i]))
+        if printOutput:
+            print("%.12f"%output, end = " ")
+            print(int(round(output)), end = " ")
+            print(int(classes[i]))
 
     # print set output
-    print(correct, end = " ")
-    print(misclassified)
+    if printOutput:
+        print(correct, end = " ")
+        print(misclassified)
 
     if (truePositive + falsePositive) == 0:
         recall = truePositive/(truePositive + falseNegative)

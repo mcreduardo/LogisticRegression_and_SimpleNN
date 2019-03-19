@@ -62,10 +62,10 @@ testData = standarize(testData, mean, stddev)
 
 # model = weights (including bias unit)
 w_i_h, w_h_o = trainNNet\
-    (trainingData, trainingClasses, encFeatures, epochs, learnRate, hiddenUnits)
+    (trainingData, trainingClasses, encFeatures, epochs, learnRate, hiddenUnits, True)
 
 ######################################################################################
 # Testing
 
 # test and print results
-testNNet(testData, testClasses, w_i_h, w_h_o)
+testNNet(testData, testClasses, w_i_h, w_h_o, True)
