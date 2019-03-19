@@ -219,7 +219,7 @@ def trainNNet(trainData, classes, features, epochs, learnRate, hiddenUnits):
             hiddenLayerOutput = ones
             # predict output
             output = sigmoid(np.sum(w_h_o * hiddenLayerOutput))
-            if round(output) == classes[i]: correct += 1
+            if round(output+1e-15) == classes[i]: correct += 1
             else: misclassified += 1
             # loss
             loss += computeCost(output, classes[i])
