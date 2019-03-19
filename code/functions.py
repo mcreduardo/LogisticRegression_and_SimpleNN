@@ -175,9 +175,13 @@ def testLogisticRegression(testData, classes, weights):
     print(correct, end = " ")
     print(misclassified)
 
-    precision = truePositive/(truePositive + falsePositive)   
-    recall = truePositive/(truePositive + falseNegative)
-    F1_score = 2 * precision * recall / (precision + recall)
+    if (truePositive + falsePositive) == 0:
+        recall = truePositive/(truePositive + falseNegative)
+        F1_score = float('nan') # precision = NAN
+    else:
+        precision = truePositive/(truePositive + falsePositive)   
+        recall = truePositive/(truePositive + falseNegative)
+        F1_score = 2 * precision * recall / (precision + recall)
     print("%.12f"%F1_score)
 
 
@@ -284,7 +288,11 @@ def testNNet(testData, classes, w_i_h, w_h_o):
     print(correct, end = " ")
     print(misclassified)
 
-    precision = truePositive/(truePositive + falsePositive)   
-    recall = truePositive/(truePositive + falseNegative)
-    F1_score = 2 * precision * recall / (precision + recall)
+    if (truePositive + falsePositive) == 0:
+        recall = truePositive/(truePositive + falseNegative)
+        F1_score = float('nan') # precision = NAN
+    else:
+        precision = truePositive/(truePositive + falsePositive)   
+        recall = truePositive/(truePositive + falseNegative)
+        F1_score = 2 * precision * recall / (precision + recall)
     print("%.12f"%F1_score)
